@@ -14,12 +14,12 @@ export default function Page() {
   return (
     <>
       <Hero />
+      <MeetSara />
       <About />
       <Properties />
       <Process />
       <Services />
       <Showreel />
-      <MeetSara />
       <Testimonials />
       <Faq />
       <Insights />

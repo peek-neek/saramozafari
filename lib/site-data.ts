@@ -82,11 +82,11 @@ export const images = {
 
 export const navLinks = [
   { label: "Home", href: "/#top" },
+  { label: "Meet Sara", href: "/#meet-sara" },
   { label: "About", href: "/#about" },
   { label: "Listings", href: "/#listings" },
   { label: "Process", href: "/#process" },
   { label: "Services", href: "/#services" },
-  { label: "Meet Sara", href: "/#meet-sara" },
   { label: "FAQs", href: "/#faq" },
   { label: "Contact", href: "#contact" },
 ]
@@ -737,7 +737,10 @@ export const insights: Insight[] = [
           "It is tempting to open the listing apps first. Resist it for a week. Sit down with a mortgage professional, get pre-approved, and work out the monthly payment you are actually comfortable with, which is often lower than the most a lender will offer.",
           "That number becomes your filter. Every home you look at after that is one you can genuinely buy, which makes the search faster and far less emotional.",
         ],
-        image: { src: process3, alt: "Model house and piggy bank resting on floor plans" },
+        image: {
+          src: process3,
+          alt: "Model house and piggy bank resting on floor plans",
+        },
       },
       {
         heading: "Budget for the costs nobody puts in the listing",
@@ -787,7 +790,7 @@ export const insights: Insight[] = [
     image: blog2,
     sections: [
       {
-        heading: "What \"on the rise\" really means",
+        heading: 'What "on the rise" really means',
         paragraphs: [
           "A neighbourhood on the rise is not one where prices have already jumped. It is one where something lasting is changing, like a new transit line, a growing employer or fresh public investment, while homes are still priced below the areas around them.",
           "None of the places below is a sure thing, and none of this is investment advice. They are simply areas Sara is watching closely, for buyers who want room to grow into their neighbourhood.",
@@ -810,7 +813,10 @@ export const insights: Insight[] = [
         paragraphs: [
           "A new medical school campus and ongoing downtown renewal are bringing students, staff and new businesses into the core. Detached homes on nearby streets still cost noticeably less than comparable ones closer to Toronto.",
         ],
-        image: { src: about5, alt: "Modern two-storey home with a wood-panel facade" },
+        image: {
+          src: about5,
+          alt: "Modern two-storey home with a wood-panel facade",
+        },
       },
       {
         heading: "4. Oshawa",
@@ -855,7 +861,10 @@ export const insights: Insight[] = [
         paragraphs: [
           "What other sellers are asking tells you very little. What buyers actually paid tells you a lot. A good pricing analysis starts with recent sold prices for similar homes nearby, then adjusts for size, condition, lot and timing.",
         ],
-        image: { src: service5, alt: "Modern home with every window lit at dusk" },
+        image: {
+          src: service5,
+          alt: "Modern home with every window lit at dusk",
+        },
       },
       {
         heading: "Watch the direction, not just the level",
@@ -882,7 +891,10 @@ export const insights: Insight[] = [
           "If showings are steady but offers are not coming, listen to the feedback. A timely, modest adjustment almost always beats a large one made weeks later.",
           "Sara reviews every listing's activity with her sellers each week, so decisions are made on evidence, not on nerves.",
         ],
-        image: { src: process1, alt: "Agent and client celebrating a deal at a desk" },
+        image: {
+          src: process1,
+          alt: "Agent and client celebrating a deal at a desk",
+        },
       },
     ],
   },
@@ -907,7 +919,10 @@ export const insights: Insight[] = [
         paragraphs: [
           "In an open-plan space, buyers need help seeing where each room starts and ends. A rug can mark out the living area and a pendant light can anchor the dining table. A desk wedged into the bedroom just makes it look cramped.",
         ],
-        image: { src: service3, alt: "Bright living room with a grey sofa and hanging plants" },
+        image: {
+          src: service3,
+          alt: "Bright living room with a grey sofa and hanging plants",
+        },
       },
       {
         heading: "Choose furniture that shows the floor",
@@ -927,7 +942,10 @@ export const insights: Insight[] = [
           "A small table, two chairs and a plant turn a balcony from storage into extra living space. In a condo, that can be the feature buyers remember most.",
           "Remember that the listing photos are the first showing. Every staging decision should look good in a wide-angle photo as well as in person.",
         ],
-        image: { src: story3, alt: "Staged living room with a leather sofa and a gallery wall" },
+        image: {
+          src: story3,
+          alt: "Staged living room with a leather sofa and a gallery wall",
+        },
       },
       {
         heading: "Small spend, real return",
@@ -946,7 +964,10 @@ export const insightHref = (p: Insight) => `/blogs/${p.slug}`
 
 /** Whole minutes at a relaxed ~220 words a minute, never less than one. */
 export const readingTime = (p: Insight) => {
-  const text = [p.summary, ...p.sections.flatMap((s) => [s.heading, ...s.paragraphs])].join(" ")
+  const text = [
+    p.summary,
+    ...p.sections.flatMap((s) => [s.heading, ...s.paragraphs]),
+  ].join(" ")
   return Math.max(1, Math.round(text.split(/\s+/).length / 220))
 }
 

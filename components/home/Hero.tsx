@@ -67,7 +67,7 @@ function DepthStage({
             of the letters. Phones show only the middle third of the photo,
             where the towers are tallest, so the name sits higher there. */}
         <m.div
-          className="absolute inset-x-0 bottom-[48%] text-center will-change-transform md:bottom-[42%]"
+          className="absolute inset-x-0 bottom-[45%] text-center will-change-transform md:bottom-[46%]"
           style={{ transform: nameY }}
         >
           <m.p
@@ -149,7 +149,7 @@ export function Hero() {
                 "Your next home in the GTA",
                 "starts with the right agent.",
               ]}
-              className="text-[clamp(2rem,2.5vw,2.5rem)] leading-[1.05] font-medium tracking-tight text-paper"
+              className="text-[clamp(2rem,1.8vw,1.8rem)] leading-[1.05] font-medium tracking-tight text-paper"
             />
             <m.div
               className="mt-8 md:mt-6"

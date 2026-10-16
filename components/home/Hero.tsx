@@ -32,8 +32,8 @@ function DepthStage({
   photoScale,
   nameY,
 }: {
-  photoScale: MotionValue<number>
-  nameY: MotionValue<number>
+  photoScale: MotionValue<string>
+  nameY: MotionValue<string>
 }) {
   const [first, ...rest] = brand.wordmark.split(" ")
   return (
@@ -42,7 +42,7 @@ function DepthStage({
         {/* 1 · Sky */}
         <m.div
           className="absolute inset-0 origin-[45%_45%]"
-          style={{ scale: photoScale }}
+          style={{ transform: photoScale }}
         >
           <Image
             src={images.heroSky}
@@ -65,8 +65,8 @@ function DepthStage({
             base at ~50%, so the baseline lands just above the base and the
             towers cover the lower part of the letters. */}
         <m.div
-          className="absolute inset-x-0 bottom-[53%] text-center md:bottom-[53.5%]"
-          style={{ y: nameY }}
+          className="absolute inset-x-0 bottom-[53%] text-center will-change-transform md:bottom-[53.5%]"
+          style={{ transform: nameY }}
         >
           <m.p
             className="text-[18cqw] leading-[0.8] font-bold tracking-[-0.05em] whitespace-nowrap text-paper md:text-[11.2cqw]"
@@ -83,7 +83,7 @@ function DepthStage({
         {/* 3 · Skyline + foreground cut-out, in front of the name */}
         <m.div
           className="pointer-events-none absolute inset-0 origin-[45%_45%]"
-          style={{ scale: photoScale }}
+          style={{ transform: photoScale }}
         >
           <Image
             src={images.heroSkyline}
@@ -109,13 +109,20 @@ export function Hero() {
     offset: ["start start", "end start"],
   })
   // The photo (sky + cut-out, locked together) slowly zooms in while the name
-  // sinks behind the skyline.
+  // sinks behind the skyline. Output full `transform` strings rather than
+  // `scale`/`y`: Motion only hands `transform` to the browser's ScrollTimeline,
+  // which runs on the compositor in step with native touch scrolling. Driven
+  // from JS instead, the name lags a frame behind momentum scroll on phones.
   const photoScale = useTransform(
     scrollYProgress,
     [0, 1],
-    [1, reduce ? 1 : 1.1]
+    ["scale(1)", reduce ? "scale(1)" : "scale(1.1)"]
   )
-  const nameY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 220])
+  const nameY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["translateY(0px)", reduce ? "translateY(0px)" : "translateY(220px)"]
+  )
 
   return (
     <section
@@ -124,9 +131,9 @@ export function Hero() {
     >
       <DepthStage photoScale={photoScale} nameY={nameY} />
       {/* Legibility: darken the top behind the nav, and the city behind the copy */}
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/35 via-transparent via-40% to-black/45" />
+      {/* <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/35 via-transparent via-40% to-black/45" /> */}
       {/* Below the copy the photo dissolves into the About section's sand */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-sand to-transparent" />
+      {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-sand to-transparent" /> */}
 
       <div className="container-site relative">
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">

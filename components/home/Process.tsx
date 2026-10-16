@@ -8,12 +8,14 @@ import { SectionHeader } from "./SectionHeader"
 type Step = (typeof processSteps)[number]
 
 /**
- * One step, flush with the section background. On md+ each step pins at the
- * same offset and the next one slides up over it.
+ * One step, flush with the section background. Each step pins at the same
+ * offset and the next one slides up over it, so every step shares one
+ * viewport-sized height. Phones: summary beside a portrait photo, points
+ * full-width below. md+: summary, photo and points in three columns.
  */
 function StepCard({ step, index }: { step: Step; index: number }) {
   return (
-    <div className="bg-sand md:sticky md:top-24 md:h-[min(46rem,calc(100svh-7rem))]">
+    <div className="sticky top-4 h-[min(46rem,calc(100svh-2rem))] bg-sand md:top-24 md:h-[min(46rem,calc(100svh-7rem))]">
       <article className="flex h-full flex-col">
         <div className="flex items-baseline justify-between border-b border-black/15 pb-5 md:pb-7">
           <h3 className="text-[clamp(1.75rem,3vw,2.75rem)] leading-none font-medium tracking-tight text-neutral-500">
@@ -24,11 +26,11 @@ function StepCard({ step, index }: { step: Step; index: number }) {
           </span>
         </div>
 
-        <div className="mt-8 grid min-h-0 flex-1 gap-8 md:mt-10 md:grid-cols-3 md:gap-10">
-          <p className="text-[clamp(1.375rem,2.2vw,2rem)] leading-snug font-medium tracking-tight text-ink">
+        <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-7 md:mt-10 md:min-h-0 md:flex-1 md:grid-cols-3 md:gap-10">
+          <p className="text-lg leading-snug font-medium tracking-tight text-ink md:text-[clamp(1.375rem,2.2vw,2rem)]">
             {step.summary}
           </p>
-          <div className="relative aspect-[4/5] overflow-hidden bg-sand-deep md:aspect-auto md:h-full">
+          <div className="relative aspect-[7/10] overflow-hidden bg-sand-deep md:aspect-auto md:h-full">
             <Image
               src={step.image}
               alt=""
@@ -39,7 +41,7 @@ function StepCard({ step, index }: { step: Step; index: number }) {
               className="object-cover"
             />
           </div>
-          <ul className="grid list-disc content-start gap-3 pl-5 text-lg text-neutral-600 marker:text-neutral-500 md:pl-12">
+          <ul className="col-span-2 grid list-disc content-start gap-1.5 pl-5 text-base text-neutral-600 marker:text-neutral-500 md:col-span-1 md:gap-3 md:pl-12 md:text-lg">
             {step.points.map((pt) => (
               <li key={pt}>{pt}</li>
             ))}

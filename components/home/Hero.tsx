@@ -46,7 +46,7 @@ function DepthStage({
         >
           <Image
             src={images.heroSky}
-            alt="Toronto skyline and the CN Tower at sunset"
+            alt="Toronto skyline and the CN Tower across the harbour"
             fill
             quality={HERO_QUALITY}
             sizes={SIZES.hero}
@@ -57,15 +57,17 @@ function DepthStage({
           />
         </m.div>
         {/* Dims the sky only (the cut-out covers it below the skyline), so the
-            white name reads against the pale horizon while the city keeps its glow */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/35 to-black/15 to-50%" />
+            white name reads against the pale horizon while the city stays bright */}
+        <div className="absolute inset-0 bg-linear-to-b from-black/20 to-black/10 to-50%" />
 
         {/* 2 · Name — rises from behind the skyline, sinks back on scroll.
-            Skyline tops sit at 32–46% down in hero-sky.jpg and the low-rise
-            base at ~50%, so the baseline lands just above the base and the
-            towers cover the lower part of the letters. */}
+            Skyline tops sit at 47–62% down in hero-sky.jpg (CN Tower tip at
+            30%, base at ~66%), so the baseline lands at ~58% on desktop: the
+            CN Tower cuts through the name and the towers cover the lower part
+            of the letters. Phones show only the middle third of the photo,
+            where the towers are tallest, so the name sits higher there. */}
         <m.div
-          className="absolute inset-x-0 bottom-[53%] text-center will-change-transform md:bottom-[53.5%]"
+          className="absolute inset-x-0 bottom-[48%] text-center will-change-transform md:bottom-[42%]"
           style={{ transform: nameY }}
         >
           <m.p
@@ -127,7 +129,7 @@ export function Hero() {
   return (
     <section
       ref={ref}
-      className="relative z-10 flex h-svh min-h-[40rem] flex-col justify-end overflow-clip bg-ink pb-36 md:pb-48"
+      className="relative z-10 flex h-svh min-h-[40rem] flex-col justify-end overflow-clip bg-ink pb-36 md:pb-14"
     >
       <DepthStage photoScale={photoScale} nameY={nameY} />
       {/* Legibility: darken the top behind the nav, and the city behind the copy */}
@@ -147,10 +149,10 @@ export function Hero() {
                 "Your next home in the GTA",
                 "starts with the right agent.",
               ]}
-              className="text-[clamp(2rem,3vw,3rem)] leading-[1.05] font-medium tracking-tight text-paper"
+              className="text-[clamp(2rem,2.5vw,2.5rem)] leading-[1.05] font-medium tracking-tight text-paper"
             />
             <m.div
-              className="mt-8"
+              className="mt-8 md:mt-6"
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 1, ease: EASE }}
@@ -162,10 +164,11 @@ export function Hero() {
           </div>
 
           {/* Contact card: framed portrait over name, role and a call button.
-              md+ only — on phones the stacked name already fills the hero. */}
+              md+ only — on phones the stacked name already fills the hero.
+              Kept compact and low so it stays below the name behind the skyline. */}
           <m.a
             href={brand.phoneHref}
-            className="group hidden w-80 shrink-0 bg-paper p-2 md:block"
+            className="group hidden w-64 shrink-0 bg-paper p-2 md:block"
             initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 1, ease: EASE }}
@@ -183,15 +186,15 @@ export function Hero() {
             </span>
             <span className="flex items-end justify-between gap-4 px-1.5 pt-2.5 pb-1">
               <span className="min-w-0">
-                <span className="block text-base text-ink">Let&rsquo;s Talk</span>
-                <span className="mt-1.5 block text-xl leading-tight font-semibold text-ink">
+                <span className="block text-sm text-ink">Let&rsquo;s Talk</span>
+                <span className="mt-1 block text-lg leading-tight font-semibold text-ink">
                   {brand.agent}
                 </span>
-                <span className="mt-1 block text-sm tracking-wide text-ink uppercase">
+                <span className="mt-1 block text-xs tracking-wide text-ink uppercase">
                   {brand.role}
                 </span>
               </span>
-              <span className="flex shrink-0 flex-col items-end gap-4">
+              <span className="flex shrink-0 flex-col items-end gap-3">
                 <span aria-hidden className="flex h-3.5 gap-[3px]">
                   {[0, 1, 2, 3, 4].map((i) => (
                     <span
@@ -200,7 +203,7 @@ export function Hero() {
                     />
                   ))}
                 </span>
-                <span className="grid size-11 place-items-center bg-ink text-paper">
+                <span className="grid size-10 place-items-center bg-ink text-paper">
                   <Phone className="size-5 transition-transform duration-500 group-hover:-rotate-12" />
                 </span>
               </span>

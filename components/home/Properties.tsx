@@ -2,7 +2,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { Bath, BedDouble, MapPin } from "lucide-react"
 
-import { AnimatedButton, AnimatedButtonLabel } from "@/components/motion/AnimatedButton"
+import {
+  AnimatedButton,
+  AnimatedButtonLabel,
+} from "@/components/motion/AnimatedButton"
 import { Reveal } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
@@ -43,7 +46,9 @@ function PropertyCard({ p, index }: { p: Property; index: number }) {
             />
             {/* Frosted layer grows in from the centre on hover */}
             <span className="absolute inset-0 hidden scale-0 items-center justify-center bg-white/10 opacity-0 backdrop-blur-[5px] transition-[opacity,scale] duration-500 ease-out-expo group-hover:scale-100 group-hover:opacity-100 md:flex">
-              <AnimatedButtonLabel className="px-8">View Home</AnimatedButtonLabel>
+              <AnimatedButtonLabel className="px-8">
+                View Home
+              </AnimatedButtonLabel>
             </span>
             <span className="absolute top-3 left-3 flex items-center gap-1 bg-paper/90 px-2.5 py-1 text-sm text-ink backdrop-blur">
               <MapPin className="size-3.5" />
@@ -97,7 +102,7 @@ export function Properties() {
             <div className="grid w-full gap-6 lg:grid-cols-3 lg:gap-0">
               <Reveal y={24} className="lg:self-start lg:text-center">
                 <p className="text-[clamp(1rem,1.6vw,1.75rem)] font-medium text-neutral-300">
-                  [ Featured ]
+                  [ Listings ]
                 </p>
               </Reveal>
               <SplitText

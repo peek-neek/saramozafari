@@ -129,7 +129,7 @@ export function Hero() {
   return (
     <section
       ref={ref}
-      className="relative z-10 flex h-svh min-h-[40rem] flex-col justify-end overflow-clip bg-ink pb-36 md:pb-14"
+      className="relative z-10 flex h-svh min-h-[40rem] flex-col justify-end overflow-clip bg-ink pb-16 md:pb-14"
     >
       <DepthStage photoScale={photoScale} nameY={nameY} />
       {/* Legibility: darken the top behind the nav, and the city behind the copy */}

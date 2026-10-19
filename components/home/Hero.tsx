@@ -164,17 +164,18 @@ export function Hero() {
             </m.div>
           </div>
 
-          {/* Contact card: framed portrait over name, role and a call button.
+          {/* Contact card: the full (square) portrait, with name, role and a
+              call button on a frosted strip over its lower edge.
               md+ only — on phones the stacked name already fills the hero.
               Kept compact and low so it stays below the name behind the skyline. */}
           <m.a
             href={brand.phoneHref}
-            className="group hidden w-64 shrink-0 bg-paper p-2 md:block"
+            className="group hidden w-64 shrink-0 bg-paper p-1.5 md:block"
             initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 1, ease: EASE }}
           >
-            <span className="relative block aspect-[1.85] overflow-hidden">
+            <span className="relative block aspect-square overflow-hidden">
               <Image
                 src={images.sara}
                 alt={brand.agent}
@@ -182,30 +183,32 @@ export function Hero() {
                 sizes={SIZES.heroCard}
                 quality={QUALITY}
                 loading="eager"
-                className="object-cover object-[50%_10%] transition-transform duration-700 ease-out group-hover:scale-105"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
-            </span>
-            <span className="flex items-end justify-between gap-4 px-1.5 pt-2.5 pb-1">
-              <span className="min-w-0">
-                <span className="block text-sm text-ink">Let&rsquo;s Talk</span>
-                <span className="mt-1 block text-lg leading-tight font-semibold text-ink">
-                  {brand.agent}
+              <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-paper/10 px-2.5 pt-2.5 pb-2 backdrop-blur-sm">
+                <span className="min-w-0">
+                  <span className="block text-sm text-ink">
+                    Let&rsquo;s Talk
+                  </span>
+                  <span className="mt-1 block text-lg leading-tight font-semibold text-ink">
+                    {brand.agent}
+                  </span>
+                  <span className="mt-1 block text-xs tracking-wide text-ink uppercase">
+                    {brand.role}
+                  </span>
                 </span>
-                <span className="mt-1 block text-xs tracking-wide text-ink uppercase">
-                  {brand.role}
-                </span>
-              </span>
-              <span className="flex shrink-0 flex-col items-end gap-3">
-                <span aria-hidden className="flex h-3.5 gap-[3px]">
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <span
-                      key={i}
-                      className={`w-[3px] ${i < 2 ? "bg-ink" : "bg-neutral-300"}`}
-                    />
-                  ))}
-                </span>
-                <span className="grid size-10 place-items-center bg-ink text-paper">
-                  <Phone className="size-5 transition-transform duration-500 group-hover:-rotate-12" />
+                <span className="flex shrink-0 flex-col items-end gap-3">
+                  {/* <span aria-hidden className="flex h-3.5 gap-[3px]">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <span
+                        key={i}
+                        className={`w-[3px] ${i < 2 ? "bg-ink" : "bg-neutral-300"}`}
+                      />
+                    ))}
+                  </span> */}
+                  <span className="grid size-10 place-items-center bg-ink text-paper">
+                    <Phone className="size-5 transition-transform duration-500 group-hover:-rotate-12" />
+                  </span>
                 </span>
               </span>
             </span>

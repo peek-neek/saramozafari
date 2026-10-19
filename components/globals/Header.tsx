@@ -212,7 +212,11 @@ const Header = () => {
                     <ul className="space-y-3">
                       {services.map((s) => (
                         <li key={s.name}>
-                          <Link href="/#services" onClick={close} className={linkClass}>
+                          <Link
+                            href="/#services"
+                            onClick={close}
+                            className={linkClass}
+                          >
                             {s.name}
                           </Link>
                         </li>
@@ -246,7 +250,10 @@ const Header = () => {
                           target="_blank"
                           rel="noreferrer"
                           aria-label={`Instagram ${brand.instagramHandle}`}
-                          className={cn("inline-flex items-center gap-2", linkClass)}
+                          className={cn(
+                            "inline-flex items-center gap-2",
+                            linkClass
+                          )}
                         >
                           <InstagramLogo className="size-4" />
                           {brand.instagramHandle}

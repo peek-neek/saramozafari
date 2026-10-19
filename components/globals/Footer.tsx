@@ -6,9 +6,16 @@ import { ArrowUp } from "lucide-react"
 import { brand, images, navLinks } from "@/lib/site-data"
 import { LOW_QUALITY, SIZES } from "@/lib/image-sizes"
 
+import { InstagramLogo } from "./InstagramLogo"
 import { NewsletterForm } from "./NewsletterForm"
 
-function Column({ title, children }: { title: string; children: React.ReactNode }) {
+function Column({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
   return (
     <div>
       <p className="mb-4 text-sm text-neutral-500">{title}</p>
@@ -29,7 +36,8 @@ const Footer = () => {
               Stay in the loop
             </h2>
             <p className="mt-3 text-neutral-400">
-              New listings, market updates and home tips for the GTA — once a month, never spam.
+              New listings, market updates and home tips for the GTA — once a
+              month, never spam.
             </p>
           </div>
           <NewsletterForm />
@@ -50,12 +58,21 @@ const Footer = () => {
           </Column>
           <Column title="Service Area">
             <li>Greater Toronto Area</li>
-            <li className="text-neutral-400">Toronto · York · Peel · Halton · Durham</li>
+            <li className="text-neutral-400">
+              Toronto · York · Peel · Halton · Durham
+            </li>
           </Column>
           <Column title="Follow">
             <li>
-              <a href={brand.instagram} target="_blank" rel="noreferrer" className={linkClass}>
-                Instagram {brand.instagramHandle}
+              <a
+                href={brand.instagram}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Instagram ${brand.instagramHandle}`}
+                className={`inline-flex items-center gap-2 ${linkClass}`}
+              >
+                <InstagramLogo className="size-4" />
+                {brand.instagramHandle}
               </a>
             </li>
           </Column>
@@ -79,7 +96,7 @@ const Footer = () => {
             fill
             sizes={SIZES.footer}
             quality={LOW_QUALITY}
-            className="object-cover object-[50%_40%]"
+            className="object-cover object-[50%_60%]"
           />
           <p className="relative bg-ink text-center text-[clamp(3rem,11.5vw,11rem)] leading-[0.85] font-bold tracking-[-0.05em] whitespace-nowrap text-paper mix-blend-multiply">
             {brand.wordmark}
@@ -88,7 +105,8 @@ const Footer = () => {
 
         <div className="mt-10 flex flex-col-reverse gap-4 border-t border-white/10 pt-6 text-sm text-neutral-500 md:flex-row md:items-center md:justify-between">
           <p>
-            &copy; {new Date().getFullYear()} {brand.name}. {brand.agent}, {brand.role}.
+            &copy; {new Date().getFullYear()} {brand.name}. {brand.agent},{" "}
+            {brand.role}.
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className={linkClass}>

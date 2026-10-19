@@ -7,7 +7,7 @@ import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { Reveal, Stagger } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
-import type { Property } from "@/lib/site-data"
+import { listingAnchor, type Property } from "@/lib/site-data"
 import { cn } from "@/lib/utils"
 
 function Stat({ label, value }: { label: string; value: ReactNode }) {
@@ -103,7 +103,7 @@ export function ListingDetail({ p }: { p: Property }) {
       <div className="container-site pt-[clamp(7.5rem,12vw,10rem)] pb-[clamp(4.5rem,9vw,7.5rem)]">
         <Reveal y={24}>
           <Link
-            href="/#listings"
+            href={`/#${listingAnchor(p)}`}
             className="inline-flex items-center gap-2 text-neutral-500 transition-colors hover:text-ink"
           >
             <ArrowLeft className="size-4" />

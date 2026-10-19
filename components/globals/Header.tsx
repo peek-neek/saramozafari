@@ -6,6 +6,7 @@ import Link from "next/link"
 import { AnimatePresence } from "motion/react"
 import * as m from "motion/react-m"
 
+import { InstagramLogo } from "@/components/globals/InstagramLogo"
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { brand, images, navLinks, services } from "@/lib/site-data"
 import { LOW_QUALITY, SIZES } from "@/lib/image-sizes"
@@ -244,9 +245,11 @@ const Header = () => {
                           href={brand.instagram}
                           target="_blank"
                           rel="noreferrer"
-                          className={linkClass}
+                          aria-label={`Instagram ${brand.instagramHandle}`}
+                          className={cn("inline-flex items-center gap-2", linkClass)}
                         >
-                          Instagram {brand.instagramHandle}
+                          <InstagramLogo className="size-4" />
+                          {brand.instagramHandle}
                         </a>
                       </li>
                       <li className={cn(linkClass, "hover:text-neutral-500")}>

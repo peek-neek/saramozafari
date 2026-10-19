@@ -77,7 +77,7 @@ export const images = {
   heroSky,
   heroSkyline,
   sara,
-  footer: reel1,
+  footer: heroSky,
 }
 
 export const navLinks = [
@@ -440,6 +440,8 @@ export const getProperty = (slug: string) =>
   properties.find((p) => p.slug === slug)
 
 export const listingHref = (p: Property) => `/listings/${p.slug}`
+/** Element id of a listing's card in the homepage Listings section. */
+export const listingAnchor = (p: Property) => `listing-${p.slug}`
 
 /* -------------------------------------------------------------------------- */
 /* Process                                                                      */

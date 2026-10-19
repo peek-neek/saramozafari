@@ -97,7 +97,13 @@ function ButtonBody({ children, tone, icon }: Required<Pick<ButtonLookProps, "ch
         <RollingText>{children}</RollingText>
       </span>
       {icon !== false && (
-        <span className="relative transition-transform duration-700 ease-out-expo group-hover/btn:rotate-45">
+        // Only the default arrow tilts on hover; custom icons (logos) stay upright.
+        <span
+          className={cn(
+            "relative",
+            icon == null && "transition-transform duration-700 ease-out-expo group-hover/btn:rotate-45"
+          )}
+        >
           {icon ?? <ArrowUpRight className="size-4" />}
         </span>
       )}

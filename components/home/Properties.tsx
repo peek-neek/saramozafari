@@ -9,7 +9,7 @@ import {
 import { Reveal } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
-import { listingHref, properties, type Property } from "@/lib/site-data"
+import { listingAnchor, listingHref, properties, type Property } from "@/lib/site-data"
 import { cn } from "@/lib/utils"
 
 /**
@@ -27,8 +27,9 @@ function PropertyCard({ p, index }: { p: Property; index: number }) {
   const { aspect, inset } = placement(index)
   return (
     // `order` keeps the original sequence on mobile, where both columns
-    // collapse (`display: contents`) into one list.
-    <div style={{ order: index }} className={inset}>
+    // collapse (`display: contents`) into one list. The id lets a listing
+    // page's "All Listings" link return to this exact card.
+    <div id={listingAnchor(p)} style={{ order: index }} className={cn("scroll-mt-16", inset)}>
       <Reveal>
         <article className="group">
           <Link

@@ -1,3 +1,4 @@
+import { InstagramLogo } from "@/components/globals/InstagramLogo"
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { ImageTrail } from "@/components/motion/ImageTrail"
 import { Reveal } from "@/components/motion/Reveal"
@@ -23,8 +24,15 @@ export function Cta() {
             <AnimatedButton href={brand.phoneHref} tone="light">
               {`Call ${brand.phone}`}
             </AnimatedButton>
-            <AnimatedButton href={brand.instagram} target="_blank" rel="noreferrer" tone="glass">
-              Message on Instagram
+            <AnimatedButton
+              href={brand.instagram}
+              target="_blank"
+              rel="noreferrer"
+              tone="glass"
+              aria-label="Message on Instagram"
+              icon={<InstagramLogo className="size-4" />}
+            >
+              Message on
             </AnimatedButton>
           </Reveal>
         </div>

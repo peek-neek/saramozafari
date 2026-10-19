@@ -65,9 +65,10 @@ function DepthStage({
             30%, base at ~66%), so the baseline lands at ~58% on desktop: the
             CN Tower cuts through the name and the towers cover the lower part
             of the letters. Phones show only the middle third of the photo,
-            where the towers are tallest, so the name sits higher there. */}
+            where the towers are tallest, so the name sits higher there (high
+            enough that the tall towers don't hide the end of the last name). */}
         <m.div
-          className="absolute inset-x-0 bottom-[45%] text-center will-change-transform md:bottom-[46%]"
+          className="absolute inset-x-0 bottom-[50%] text-center will-change-transform md:bottom-[46%]"
           style={{ transform: nameY }}
         >
           <m.p

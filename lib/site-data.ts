@@ -596,7 +596,7 @@ export const meetSara = {
     },
     {
       title: "Buyers & sellers",
-      body: "Family homes, condos,commercial properties, investment properties. ",
+      body: "Family homes, condos, commercial properties, and investment properties. ",
     },
   ],
 }

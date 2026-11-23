@@ -1,7 +1,16 @@
 import type { ReactNode } from "react"
 import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
-import { ArrowLeft, MapPin } from "lucide-react"
+import {
+  ArrowLeft,
+  Bath,
+  BedDouble,
+  House,
+  LandPlot,
+  MapPin,
+  Ruler,
+  type LucideIcon,
+} from "lucide-react"
 
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { Reveal, Stagger } from "@/components/motion/Reveal"
@@ -10,10 +19,13 @@ import { QUALITY, SIZES } from "@/lib/image-sizes"
 import { listingAnchor, type Property } from "@/lib/site-data"
 import { cn } from "@/lib/utils"
 
-function Stat({ label, value }: { label: string; value: ReactNode }) {
+function Stat({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-neutral-300 pb-3">
-      <span className="text-neutral-500">[ {label} ]</span>
+      <span className="flex items-center gap-2.5 text-neutral-500">
+        <Icon aria-hidden className="size-4.5 shrink-0 stroke-[1.5]" />
+        [ {label} ]
+      </span>
       <span className="text-right font-medium">{value}</span>
     </div>
   )
@@ -163,14 +175,14 @@ export function ListingDetail({ p }: { p: Property }) {
             <AnimatedButton href="#contact">Book a Viewing</AnimatedButton>
           </div>
           <div className="flex flex-col gap-4">
-            <Stat label="Property Type" value={p.type} />
-            <Stat label="Bedrooms" value={p.beds} />
-            <Stat label="Bathrooms" value={p.baths} />
+            <Stat icon={House} label="Property Type" value={p.type} />
+            <Stat icon={BedDouble} label="Bedrooms" value={p.beds} />
+            <Stat icon={Bath} label="Bathrooms" value={p.baths} />
           </div>
           <div className="flex flex-col gap-4">
-            <Stat label="Square Footage" value={p.sqft} />
-            <Stat label="Lot Size" value={p.lot} />
-            <Stat label="Area" value={p.area} />
+            <Stat icon={Ruler} label="Square Footage" value={p.sqft} />
+            <Stat icon={LandPlot} label="Lot Size" value={p.lot} />
+            <Stat icon={MapPin} label="Area" value={p.area} />
           </div>
         </Stagger>
 

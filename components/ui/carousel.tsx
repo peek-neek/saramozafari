@@ -58,14 +58,28 @@ function Carousel({
     },
     plugins
   )
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
-
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return
-    setCanScrollPrev(api.canScrollPrev())
-    setCanScrollNext(api.canScrollNext())
-  }, [])
+  // Embla is an external store: subscribe to its events and read the
+  // scroll limits on demand, instead of mirroring them into state in an effect.
+  const subscribe = React.useCallback(
+    (onChange: () => void) => {
+      if (!api) return () => {}
+      api.on("select", onChange)
+      api.on("reInit", onChange)
+      return () => {
+        api.off("select", onChange)
+        api.off("reInit", onChange)
+      }
+    },
+    [api]
+  )
+  // A two-character string keeps the snapshot a stable primitive ("10" = can go back, not forward).
+  const scrollState = React.useSyncExternalStore(
+    subscribe,
+    () => (api ? `${Number(api.canScrollPrev())}${Number(api.canScrollNext())}` : "00"),
+    () => "00"
+  )
+  const canScrollPrev = scrollState[0] === "1"
+  const canScrollNext = scrollState[1] === "1"
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev()
@@ -92,17 +106,6 @@ function Carousel({
     if (!api || !setApi) return
     setApi(api)
   }, [api, setApi])
-
-  React.useEffect(() => {
-    if (!api) return
-    onSelect(api)
-    api.on("reInit", onSelect)
-    api.on("select", onSelect)
-
-    return () => {
-      api?.off("select", onSelect)
-    }
-  }, [api, onSelect])
 
   return (
     <CarouselContext.Provider

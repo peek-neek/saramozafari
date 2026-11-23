@@ -7,7 +7,7 @@ import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { Reveal, Stagger } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
-import { brand, insights, readingTime, type Insight } from "@/lib/site-data"
+import { brand, insightAnchor, insights, readingTime, type Insight } from "@/lib/site-data"
 
 export function BlogPost({ post }: { post: Insight }) {
   const meta = [
@@ -24,7 +24,7 @@ export function BlogPost({ post }: { post: Insight }) {
         <div className="container-site pt-[clamp(7.5rem,12vw,10rem)] pb-[clamp(4.5rem,9vw,7.5rem)]">
           <Reveal y={24}>
             <Link
-              href="/#insights"
+              href={`/#${insightAnchor(post)}`}
               className="inline-flex items-center gap-2 text-neutral-500 transition-colors hover:text-ink"
             >
               <ArrowLeft className="size-4" />

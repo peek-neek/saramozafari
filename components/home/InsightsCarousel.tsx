@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import * as m from "motion/react-m"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
@@ -10,8 +11,9 @@ import {
   CarouselContent,
   CarouselItem,
   useCarousel,
+  type CarouselApi,
 } from "@/components/ui/carousel"
-import type { Insight } from "@/lib/site-data"
+import { insightAnchor, type Insight } from "@/lib/site-data"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 const VIEWPORT = { once: true, margin: "0px 0px -10% 0px" } as const
@@ -42,6 +44,15 @@ function Arrows() {
  * from the outer `m.div`, so off-screen slides animate in step too).
  */
 export function InsightsCarousel({ posts }: { posts: Insight[] }) {
+  const [api, setApi] = useState<CarouselApi>()
+
+  // Back from an article (/#insight-<slug>): open on that article's slide.
+  useEffect(() => {
+    if (!api) return
+    const index = posts.findIndex((p) => `#${insightAnchor(p)}` === window.location.hash)
+    if (index > 0) api.scrollTo(index, true)
+  }, [api, posts])
+
   return (
     <m.div
       className="mt-14 md:mt-20"
@@ -54,12 +65,14 @@ export function InsightsCarousel({ posts }: { posts: Insight[] }) {
         opts={{ align: "start", breakpoints: { "(min-width: 768px)": { active: false } } }}
         // Desktop has no slides to clip, so let the cards' rise show unmasked.
         className="md:[&_[data-slot=carousel-content]]:overflow-visible"
+        setApi={setApi}
       >
         <CarouselContent className="md:ml-0 md:grid md:grid-cols-3 md:gap-5">
           {posts.map((post) => (
             <CarouselItem
               key={post.slug}
-              className="md:pl-0 [&:nth-child(4)]:md:hidden"
+              id={insightAnchor(post)}
+              className="scroll-mt-16 md:pl-0 [&:nth-child(4)]:md:hidden"
             >
               <m.div
                 variants={{

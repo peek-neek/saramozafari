@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Mail, Phone } from "lucide-react"
+import { Mail, MessageCircle, Phone } from "lucide-react"
 
 import { InstagramLogo } from "@/components/globals/InstagramLogo"
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
@@ -10,9 +10,22 @@ import { brand, meetSara } from "@/lib/site-data"
 import { SectionHeader } from "./SectionHeader"
 
 const contacts = [
-  { href: brand.instagram, label: "Instagram", icon: <InstagramLogo className="size-4" /> },
   { href: brand.phoneHref, label: "Call", icon: <Phone className="size-4" /> },
-  { href: `mailto:${brand.email}`, label: "Email", icon: <Mail className="size-4" /> },
+  {
+    href: brand.smsHref,
+    label: "Text",
+    icon: <MessageCircle className="size-4" />,
+  },
+  {
+    href: `mailto:${brand.email}`,
+    label: "Email",
+    icon: <Mail className="size-4" />,
+  },
+  {
+    href: brand.instagram,
+    label: "Instagram",
+    icon: <InstagramLogo className="size-4" />,
+  },
 ]
 
 /** Tilted portrait; hovering squares it up and reveals the quote and contact links. */
@@ -43,7 +56,9 @@ function Portrait() {
 
         {/* Fades in once the card has mostly squared up, and out straight away on leave. */}
         <div className="absolute inset-0 flex flex-col justify-between p-6 text-paper transition-opacity duration-300 md:p-8 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:delay-300 [@media(hover:hover)]:group-hover:duration-500">
-          <p className="text-xl leading-snug font-medium md:text-2xl">&ldquo;{s.quote}&rdquo;</p>
+          <p className="text-xl leading-snug font-medium md:text-2xl">
+            &ldquo;{s.quote}&rdquo;
+          </p>
           <div>
             <div className="mb-4 h-px w-full bg-white/30" />
             <div className="flex items-end justify-between gap-4">
@@ -81,31 +96,55 @@ export function MeetSara() {
         </Reveal>
 
         <div>
-          <SectionHeader eyebrow="Your Agent" title={["Meet Sara", "Mozafari"]} />
+          <SectionHeader
+            eyebrow="Your Agent"
+            title={["Meet Sara", "Mozafari"]}
+          />
 
           <Reveal delay={0.2}>
-            <p className="mt-8 text-xl leading-snug font-medium text-ink md:text-2xl">{s.lead}</p>
+            <p className="mt-8 text-xl leading-snug font-medium text-ink md:text-2xl">
+              {s.lead}
+            </p>
             {s.paragraphs.map((p) => (
-              <p key={p} className="mt-5 text-lg leading-relaxed text-neutral-600">
+              <p
+                key={p}
+                className="mt-5 text-lg leading-relaxed text-neutral-600"
+              >
                 {p}
               </p>
             ))}
           </Reveal>
 
-          <Stagger className="mt-10 grid gap-6 border-t border-neutral-200 pt-8 sm:grid-cols-3" each={0.12}>
+          <Stagger
+            className="mt-10 grid gap-6 border-t border-neutral-200 pt-8 sm:grid-cols-3"
+            each={0.12}
+          >
             {s.highlights.map((h) => (
               <div key={h.title}>
                 <p className="font-medium text-ink">{h.title}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-neutral-600">{h.body}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-neutral-600">
+                  {h.body}
+                </p>
               </div>
             ))}
           </Stagger>
 
-          <Reveal delay={0.3} className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
-            <AnimatedButton href="#contact">Let&rsquo;s Talk</AnimatedButton>
-            <a href={brand.phoneHref} className="text-ink underline-offset-4 hover:underline">
-              {brand.phone}
-            </a>
+          <Reveal
+            delay={0.3}
+            className="mt-10 flex flex-wrap items-center gap-3"
+          >
+            <AnimatedButton href={brand.phoneHref} tone="dark">
+              {`Call ${brand.phone}`}
+            </AnimatedButton>
+            {/* Outlined on the light section; same grey wipe on hover. */}
+            <AnimatedButton
+              href={brand.smsHref}
+              tone="light"
+              className="border border-ink"
+              icon={<MessageCircle className="size-4" />}
+            >
+              Send a Text
+            </AnimatedButton>
           </Reveal>
         </div>
       </div>

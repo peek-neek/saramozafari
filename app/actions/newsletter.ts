@@ -2,22 +2,13 @@
 
 import { Resend } from "resend"
 
+import { EMAIL_RE, renderBrandedEmail } from "@/lib/email"
 import { brand } from "@/lib/site-data"
 
 export type NewsletterState = {
   status: "idle" | "success" | "error"
   message?: string
 }
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
 
 /**
  * Notifies the site owner (NEWSLETTER_TO_EMAIL) whenever a visitor subscribes
@@ -42,60 +33,27 @@ export async function subscribeToNewsletter(
     return { status: "error", message: "Something went wrong. Please try again later." }
   }
 
-  const submittedAt = new Date().toLocaleString("en-CA", {
-    timeZone: "America/Toronto",
-    dateStyle: "medium",
-    timeStyle: "short",
+  const { html, text, attachments } = renderBrandedEmail({
+    preheader: `${email} just joined your newsletter list.`,
+    eyebrow: "Newsletter",
+    heading: "New newsletter sign-up",
+    intro: `Someone just subscribed through the newsletter form on ${brand.name}.`,
+    details: [
+      { label: "Email", value: email, href: `mailto:${email}` },
+      { label: "Source", value: "Newsletter sign-up form" },
+    ],
+    actions: [{ label: "Email Them", href: `mailto:${email}`, primary: true, icon: "mail" }],
+    note: "You can also just hit reply — it goes straight to them.",
   })
-  const safeEmail = escapeHtml(email)
 
   const { error } = await new Resend(apiKey).emails.send({
     from,
     to: to.split(",").map((addr) => addr.trim()),
     replyTo: email,
-    subject: `New email from your website: ${email}`,
-    text: [
-      "New email came from your website",
-      "",
-      `Email: ${email}`,
-      `Submitted: ${submittedAt} (Toronto time)`,
-      "Source: Newsletter sign-up form",
-      "",
-      "Reply to this email to respond to them directly.",
-    ].join("\n"),
-    html: `
-<div style="background:#f5f2ec;padding:32px 16px;font-family:Helvetica,Arial,sans-serif;color:#1a1a1a">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e6e1d8">
-    <tr>
-      <td style="background:#1a1a1a;padding:20px 28px;color:#f5f2ec;font-size:13px;letter-spacing:3px">
-        ${escapeHtml(brand.wordmark)}
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:28px">
-        <h1 style="margin:0 0 8px;font-size:22px;font-weight:600">New email came from your website</h1>
-        <p style="margin:0 0 24px;color:#555;font-size:15px;line-height:1.5">
-          Someone just signed up through the newsletter form on ${escapeHtml(brand.name)}.
-        </p>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px">
-          <tr>
-            <td style="padding:10px 0;border-top:1px solid #eee;color:#777;width:110px">Email</td>
-            <td style="padding:10px 0;border-top:1px solid #eee"><a href="mailto:${safeEmail}" style="color:#1a1a1a">${safeEmail}</a></td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-top:1px solid #eee;color:#777">Submitted</td>
-            <td style="padding:10px 0;border-top:1px solid #eee">${escapeHtml(submittedAt)} (Toronto)</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;color:#777">Source</td>
-            <td style="padding:10px 0;border-top:1px solid #eee;border-bottom:1px solid #eee">Newsletter sign-up form</td>
-          </tr>
-        </table>
-        <p style="margin:24px 0 0;color:#777;font-size:13px">Hit reply to respond to them directly.</p>
-      </td>
-    </tr>
-  </table>
-</div>`,
+    subject: `New newsletter sign-up: ${email}`,
+    html,
+    text,
+    attachments,
   })
 
   if (error) {

@@ -30,7 +30,11 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
   return (
     <>
       <ListingDetail p={p} />
-      <Cta />
+      <Cta
+        title={["Ready to Talk", "About This Home?"]}
+        listingSlug={p.slug}
+        summary={`Book a private showing of ${p.title} or ask Sara anything about it — price, neighbourhood, next steps. She will get back to you personally.`}
+      />
     </>
   )
 }

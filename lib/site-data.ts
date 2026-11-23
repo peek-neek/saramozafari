@@ -59,12 +59,17 @@ import blog4 from "@/assets/images/blog-4.jpg"
 
 export const brand = {
   name: "Saramoz Homes",
-  wordmark: "SARA MOZAFARI",
+  wordmark: "SARAMOZ HOMES",
   agent: "Sara Mozafari",
   role: "Real Estate Agent",
   region: "Greater Toronto Area, Ontario",
   phone: "416-844-1380",
   phoneHref: "tel:+14168441380",
+  // Opens the visitor's own Messages app with Sara's number and a starter
+  // message filled in. "?&body=" is read correctly by both iOS and Android.
+  smsHref: `sms:+14168441380?&body=${encodeURIComponent(
+    "Hi Sara, I'd like to book a consultation."
+  )}`,
   // Placeholder — replace with Sara's real address.
   email: "saramozhomes@gmail.com",
   instagram: "https://www.instagram.com/saramoz.homes/",
@@ -521,34 +526,28 @@ export const processSteps = [
 
 export const services = [
   {
-    name: "Buy",
+    name: "Service for Buyers",
     cta: "Start Buying",
-    body: "Find the right home without the guesswork. Sara narrows the search, flags red flags early and helps you write an offer you feel good about.",
+    body: "From a first consultation to closing day: a realistic budget with every hidden cost uncovered, neighbourhood research, focused showings and firm negotiation for the best price and terms.",
     image: service1,
   },
   {
-    name: "Sell",
+    name: "Service for Sellers",
     cta: "Plan Your Sale",
-    body: "A pricing strategy backed by local data, polished marketing and steady negotiation - so your home sells for what it is worth.",
+    body: "A price grounded in comparable sales, professional photos, video and virtual tours, and marketing that reaches agents and buyers across every channel - backed by open houses and steady negotiation.",
     image: service2,
   },
   {
-    name: "Lease",
-    cta: "Find a Lease",
-    body: "For tenants and landlords alike: well-matched rentals, careful screening and leases that protect both sides.",
+    name: "Service for Landlords",
+    cta: "List Your Rental",
+    body: "Get your property rent-ready, show it at its best with quality photos and wide advertising, then place a reliable tenant after careful checks on documents, income and rental history.",
     image: service3,
   },
   {
-    name: "Pre-Construction",
-    cta: "Explore Pre-Construction",
-    body: "Navigate GTA condo and townhome launches with clear guidance on builders, deposit structures and assignment options.",
+    name: "Service for Tenants",
+    cta: "Find a Rental",
+    body: "One conversation to understand what you need, then Sara does the searching and viewing alongside you and negotiates on your behalf for the best rent and lease terms.",
     image: service4,
-  },
-  {
-    name: "Invest",
-    cta: "Talk Investing",
-    body: "Income properties chosen on the numbers. Cash-flow analysis, rental demand and long-term value, explained simply.",
-    image: service5,
   },
 ]
 
@@ -597,7 +596,7 @@ export const meetSara = {
     },
     {
       title: "Buyers & sellers",
-      body: "First condos, family homes, downsizing and investment.",
+      body: "Family homes, condos,commercial properties, investment properties. ",
     },
   ],
 }
@@ -963,6 +962,8 @@ export const getInsight = (slug: string) =>
   insights.find((p) => p.slug === slug)
 
 export const insightHref = (p: Insight) => `/blogs/${p.slug}`
+/** Element id of an article's card in the homepage Insights section. */
+export const insightAnchor = (p: Insight) => `insight-${p.slug}`
 
 /** Whole minutes at a relaxed ~220 words a minute, never less than one. */
 export const readingTime = (p: Insight) => {

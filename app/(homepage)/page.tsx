@@ -15,10 +15,10 @@ export default function Page() {
     <>
       <Hero />
       <MeetSara />
+      <Services />
       <About />
       <Properties />
       <Process />
-      <Services />
       <Showreel />
       <Testimonials />
       <Faq />

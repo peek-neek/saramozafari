@@ -19,7 +19,8 @@ type ImageTrailProps = {
 /**
  * Spawns images along the cursor path. Each image glides from the previous
  * spawn point to the cursor, then shrinks away. Imperative Motion `animate`
- * calls on refs — no React state per mouse move.
+ * calls on refs — no React state per mouse move. Descendants marked
+ * `data-no-trail` are quiet zones where nothing spawns.
  */
 export function ImageTrail({
   images,
@@ -45,6 +46,12 @@ export function ImageTrail({
 
     const onMove = (e: PointerEvent) => {
       if (!media.matches) return
+      // Quiet zones (e.g. a form): no spawns inside, and the trail restarts
+      // from wherever the cursor leaves rather than sweeping across it.
+      if ((e.target as Element | null)?.closest?.("[data-no-trail]")) {
+        primed = false
+        return
+      }
       const rect = wrapper.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top

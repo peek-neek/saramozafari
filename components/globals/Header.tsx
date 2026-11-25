@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useId, useState } from "react"
+import React, { useEffect, useId, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence } from "motion/react"
@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils"
 const EASE = [0.16, 1, 0.3, 1] as const
 /** Collapsed bar width (px) — matches max-w-[65rem]. */
 const CLOSED_WIDTH = 1040
+/** The nav's inner padding (px) — matches p-2. */
+const NAV_PADDING = 8
 
 export function Logo({ className }: { className?: string }) {
   return (
@@ -71,11 +73,12 @@ function Card({
   return (
     <m.div
       className={cn("bg-paper p-6 md:p-10", className)}
-      initial={{ opacity: 0, y: 32, scale: 0.97 }}
+      // Fade and rise only: scaling the card resized its text and made it
+      // snap sharp when the animation finished.
+      initial={{ opacity: 0, y: 32 }}
       animate={{
         opacity: 1,
         y: 0,
-        scale: 1,
         transition: { delay: 0.55 + index * 0.08, duration: 0.7, ease: EASE },
       }}
       exit={{ opacity: 0, y: 16, transition: { duration: 0.25 } }}
@@ -100,10 +103,21 @@ const Header = () => {
   const [open, setOpen] = useState(false)
   const [openWidth, setOpenWidth] = useState(CLOSED_WIDTH)
   const panelId = useId()
+  const headerRef = useRef<HTMLElement>(null)
+
+  /** The widest the bar can actually get: the header's content box. */
+  const measureOpenWidth = () => {
+    const el = headerRef.current
+    if (!el) return window.innerWidth
+    const cs = getComputedStyle(el)
+    return (
+      el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+    )
+  }
 
   const toggle = () => {
-    // Measure at click time so the bar grows exactly to the viewport edge.
-    setOpenWidth(window.innerWidth)
+    // Measure at click time so the bar grows exactly to its final width.
+    setOpenWidth(measureOpenWidth())
     setOpen((v) => !v)
   }
   const close = () => setOpen(false)
@@ -116,7 +130,7 @@ const Header = () => {
     root.style.overflow = "hidden"
 
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false)
-    const onResize = () => setOpenWidth(window.innerWidth)
+    const onResize = () => setOpenWidth(measureOpenWidth())
     window.addEventListener("keydown", onKey)
     window.addEventListener("resize", onResize)
     return () => {
@@ -128,7 +142,10 @@ const Header = () => {
   }, [open])
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 px-3 pt-3 md:px-4 md:pt-4">
+    <header
+      ref={headerRef}
+      className="absolute inset-x-0 top-0 z-50 px-3 pt-3 md:px-4 md:pt-4"
+    >
       <m.nav
         aria-label="Main"
         className="mx-auto w-full max-w-[65rem] bg-ink p-2"
@@ -185,9 +202,13 @@ const Header = () => {
                 transition: { duration: 0.55, ease: EASE, delay: 0.15 },
               }}
             >
+              {/* Laid out at the bar's final width from the first frame and
+                  kept centred, so nothing reflows while the bar widens — the
+                  panel's overflow-hidden just clips the edges until it's done. */}
               <div
                 data-native-scroll
-                className="mt-2 grid max-h-[calc(100svh-7rem)] gap-2 overflow-y-auto overscroll-contain md:h-[calc(100svh-7.5rem)] md:max-h-none md:grid-cols-3"
+                style={{ width: openWidth - NAV_PADDING * 2 }}
+                className="relative left-1/2 mt-2 grid max-h-[calc(100svh-7rem)] -translate-x-1/2 gap-2 overflow-y-auto overscroll-contain md:h-[calc(100svh-7.5rem)] md:max-h-none md:grid-cols-3"
               >
                 <Card index={0}>
                   <CardTitle>Explore</CardTitle>
@@ -267,22 +288,32 @@ const Header = () => {
 
                   <m.div
                     className="relative min-h-64 overflow-hidden"
-                    initial={{ opacity: 0, scale: 1.08 }}
+                    initial={{ opacity: 0 }}
                     animate={{
                       opacity: 1,
-                      scale: 1,
                       transition: { delay: 0.7, duration: 0.9, ease: EASE },
                     }}
                     exit={{ opacity: 0, transition: { duration: 0.25 } }}
                   >
-                    <Image
-                      src={images.sara}
-                      alt=""
-                      fill
-                      sizes={SIZES.menu}
-                      quality={LOW_QUALITY}
-                      className="object-cover object-top"
-                    />
+                    {/* Only the photo zooms, clipped by the frame; the text and
+                        button on top keep their size. */}
+                    <m.div
+                      className="absolute inset-0"
+                      initial={{ scale: 1.08 }}
+                      animate={{
+                        scale: 1,
+                        transition: { delay: 0.7, duration: 0.9, ease: EASE },
+                      }}
+                    >
+                      <Image
+                        src={images.sara}
+                        alt=""
+                        fill
+                        sizes={SIZES.menu}
+                        quality={LOW_QUALITY}
+                        className="object-cover object-top"
+                      />
+                    </m.div>
                     <div className="absolute inset-0 flex flex-col justify-end gap-5 bg-linear-to-t from-black/80 via-black/25 to-transparent p-6 md:p-10">
                       <p className="text-2xl leading-tight font-medium text-paper md:text-3xl">
                         Patient guidance.

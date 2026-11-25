@@ -5,6 +5,8 @@ import {
   ArrowLeft,
   Bath,
   BedDouble,
+  Car,
+  DoorOpen,
   House,
   LandPlot,
   MapPin,
@@ -12,19 +14,28 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+import { ClosedTag } from "@/components/home/Properties"
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { Reveal, Stagger } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
-import { listingAnchor, type Property } from "@/lib/site-data"
+import { closedLabel, listingAnchor, type Property } from "@/lib/site-data"
 import { cn } from "@/lib/utils"
 
-function Stat({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: ReactNode }) {
+function Stat({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: LucideIcon
+  label: string
+  value: ReactNode
+}) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-neutral-300 pb-3">
       <span className="flex items-center gap-2.5 text-neutral-500">
-        <Icon aria-hidden className="size-4.5 shrink-0 stroke-[1.5]" />
-        [ {label} ]
+        <Icon aria-hidden className="size-4.5 shrink-0 stroke-[1.5]" />[ {label}{" "}
+        ]
       </span>
       <span className="text-right font-medium">{value}</span>
     </div>
@@ -56,7 +67,13 @@ function BulletList({ items }: { items: ReactNode[] }) {
 }
 
 /** Pairs of photos, a narrow portrait beside a wide one, alternating sides. */
-function Gallery({ title, photos }: { title: string; photos: StaticImageData[] }) {
+function Gallery({
+  title,
+  photos,
+}: {
+  title: string
+  photos: StaticImageData[]
+}) {
   const rows: StaticImageData[][] = []
   for (let i = 0; i < photos.length; i += 2) rows.push(photos.slice(i, i + 2))
 
@@ -75,7 +92,10 @@ function Gallery({ title, photos }: { title: string; photos: StaticImageData[] }
               key={r}
               className={cn(
                 "grid items-end gap-4 md:gap-6",
-                row.length === 2 && (flip ? "md:grid-cols-[1fr_0.71fr]" : "md:grid-cols-[0.71fr_1fr]")
+                row.length === 2 &&
+                  (flip
+                    ? "md:grid-cols-[1fr_0.71fr]"
+                    : "md:grid-cols-[0.71fr_1fr]")
               )}
             >
               {row.map((src, i) => {
@@ -85,7 +105,11 @@ function Gallery({ title, photos }: { title: string; photos: StaticImageData[] }
                     <div
                       className={cn(
                         "group relative overflow-hidden bg-neutral-200",
-                        row.length === 1 ? "aspect-video" : narrow ? "aspect-4/5" : "aspect-5/4"
+                        row.length === 1
+                          ? "aspect-video"
+                          : narrow
+                            ? "aspect-4/5"
+                            : "aspect-5/4"
                       )}
                     >
                       <Image
@@ -109,6 +133,27 @@ function Gallery({ title, photos }: { title: string; photos: StaticImageData[] }
   )
 }
 
+/** The first two optional facts a listing has, e.g. size + lot for a house. */
+function extraStats(p: Property) {
+  const all: { icon: LucideIcon; label: string; value?: string }[] = [
+    { icon: Ruler, label: "Square Footage", value: p.sqft },
+    { icon: LandPlot, label: "Lot Size", value: p.lot },
+    { icon: Car, label: "Parking", value: p.parking },
+    { icon: DoorOpen, label: "Rooms", value: p.rooms },
+  ]
+  return all
+    .flatMap((s) => (s.value ? [{ ...s, value: s.value }] : []))
+    .slice(0, 2)
+}
+
+function ctaLabel(p: Property) {
+  if (!p.closed) return "Book a Viewing"
+  const lease = p.closed.status === "leased"
+  if (p.closed.side === "buyer")
+    return lease ? "Find a Rental" : "Buy With Sara"
+  return lease ? "List Your Rental" : "Sell With Sara"
+}
+
 export function ListingDetail({ p }: { p: Property }) {
   return (
     <article className="bg-paper text-ink">
@@ -126,7 +171,10 @@ export function ListingDetail({ p }: { p: Property }) {
         {/* Title block */}
         <div className="mx-auto mt-10 flex max-w-[53rem] flex-col items-center gap-6 text-center md:mt-6">
           <Reveal y={24}>
-            <p className="text-neutral-500">[ {p.area} · {p.type} ]</p>
+            <p className="text-neutral-500">
+              [ {p.closed && `${closedLabel(p)} · `}
+              {p.area} · {p.type} ]
+            </p>
           </Reveal>
           <SplitText
             as="h1"
@@ -136,7 +184,9 @@ export function ListingDetail({ p }: { p: Property }) {
             className="text-[clamp(2.5rem,6vw,5.5rem)] leading-[1.02] font-medium tracking-[-0.03em]"
           />
           <Reveal delay={0.2} className="max-w-xl">
-            <p className="text-lg leading-relaxed text-neutral-600">{p.summary}</p>
+            <p className="text-lg leading-relaxed text-neutral-600">
+              {p.summary}
+            </p>
           </Reveal>
         </div>
 
@@ -153,6 +203,12 @@ export function ListingDetail({ p }: { p: Property }) {
               placeholder="blur"
               className="object-cover"
             />
+            {p.closed && (
+              <ClosedTag
+                label={closedLabel(p)}
+                className="absolute top-4 left-4"
+              />
+            )}
           </div>
         </Reveal>
 
@@ -163,16 +219,55 @@ export function ListingDetail({ p }: { p: Property }) {
         >
           <div className="flex h-full flex-col items-start justify-between gap-6">
             <div>
-              <p className="text-neutral-500">[ Listed at ]</p>
+              <p className="text-neutral-500">
+                [ {p.closed ? `${closedLabel(p)} for` : "Listed at"} ]
+              </p>
               <p className="mt-2 text-[clamp(2rem,3.5vw,3rem)] leading-none font-medium tracking-tight">
                 {p.price}
+                {p.closed?.status === "leased" && (
+                  <span className="text-lg font-normal tracking-normal text-neutral-500">
+                    /month
+                  </span>
+                )}
               </p>
+              {p.closed && (
+                <p className="mt-3 text-neutral-500">
+                  {p.closed.side === "buyer" && (
+                    <>
+                      <span className="font-medium text-ink">
+                        Sara represented the{" "}
+                        {p.closed.status === "leased" ? "tenant" : "buyer"}
+                      </span>{" "}
+                      ·{" "}
+                    </>
+                  )}
+                  Listed at{" "}
+                  <span
+                    className={cn(
+                      p.closed.listPrice !== p.price && "line-through"
+                    )}
+                  >
+                    {p.closed.listPrice}
+                  </span>
+                  {p.closed.side === "seller" && (
+                    <>
+                      {" "}
+                      ·{" "}
+                      <span className="font-medium text-ink">
+                        {p.closed.percentOfList}% of asking
+                      </span>
+                    </>
+                  )}
+                  {p.closed.term && ` · ${p.closed.term}`} ·{" "}
+                  {p.closed.daysOnMarket}&nbsp;days on market
+                </p>
+              )}
               <p className="mt-4 flex items-center gap-2 font-medium">
                 <MapPin className="size-4" />
                 {p.area}, Ontario
               </p>
             </div>
-            <AnimatedButton href="#contact">Book a Viewing</AnimatedButton>
+            <AnimatedButton href="#contact">{ctaLabel(p)}</AnimatedButton>
           </div>
           <div className="flex flex-col gap-4">
             <Stat icon={House} label="Property Type" value={p.type} />
@@ -180,8 +275,9 @@ export function ListingDetail({ p }: { p: Property }) {
             <Stat icon={Bath} label="Bathrooms" value={p.baths} />
           </div>
           <div className="flex flex-col gap-4">
-            <Stat icon={Ruler} label="Square Footage" value={p.sqft} />
-            <Stat icon={LandPlot} label="Lot Size" value={p.lot} />
+            {extraStats(p).map((s) => (
+              <Stat key={s.label} {...s} />
+            ))}
             <Stat icon={MapPin} label="Area" value={p.area} />
           </div>
         </Stagger>
@@ -203,7 +299,8 @@ export function ListingDetail({ p }: { p: Property }) {
               <BulletList
                 items={p.nearby.map((n) => (
                   <>
-                    <span className="font-medium text-ink">{n.time}</span> to {n.place}
+                    <span className="font-medium text-ink">{n.time}</span> to{" "}
+                    {n.place}
                   </>
                 ))}
               />
@@ -211,7 +308,9 @@ export function ListingDetail({ p }: { p: Property }) {
           )}
         </div>
 
-        {p.gallery && p.gallery.length > 0 && <Gallery title={p.title} photos={p.gallery} />}
+        {p.gallery && p.gallery.length > 0 && (
+          <Gallery title={p.title} photos={p.gallery} />
+        )}
       </div>
     </article>
   )

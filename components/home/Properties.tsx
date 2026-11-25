@@ -8,8 +8,16 @@ import {
 } from "@/components/motion/AnimatedButton"
 import { Reveal } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
+import { Badge } from "@/components/ui/badge"
 import { QUALITY, SIZES } from "@/lib/image-sizes"
-import { listingAnchor, listingHref, properties, type Property } from "@/lib/site-data"
+import {
+  closedLabel,
+  closedNote,
+  listingAnchor,
+  listingHref,
+  properties,
+  type Property,
+} from "@/lib/site-data"
 import { cn } from "@/lib/utils"
 
 /**
@@ -23,13 +31,38 @@ function placement(i: number) {
     : { aspect: "aspect-[4/5]", inset: "md:ml-[15%]" }
 }
 
+/** Inverted twin of the area chip: solid ink with a paper square, like the site's bullets. */
+export function ClosedTag({
+  label,
+  className,
+}: {
+  label: string
+  className?: string
+}) {
+  return (
+    <Badge
+      className={cn(
+        "h-auto gap-2 rounded-none bg-ink px-2.5 py-1 text-sm font-medium tracking-[0.18em] text-paper uppercase",
+        className
+      )}
+    >
+      <span aria-hidden className="size-1.5 bg-paper" />
+      {label}
+    </Badge>
+  )
+}
+
 function PropertyCard({ p, index }: { p: Property; index: number }) {
   const { aspect, inset } = placement(index)
   return (
     // `order` keeps the original sequence on mobile, where both columns
     // collapse (`display: contents`) into one list. The id lets a listing
     // page's "All Listings" link return to this exact card.
-    <div id={listingAnchor(p)} style={{ order: index }} className={cn("scroll-mt-16", inset)}>
+    <div
+      id={listingAnchor(p)}
+      style={{ order: index }}
+      className={cn("scroll-mt-16", inset)}
+    >
       <Reveal>
         <article className="group">
           <Link
@@ -48,13 +81,19 @@ function PropertyCard({ p, index }: { p: Property; index: number }) {
             {/* Frosted layer grows in from the centre on hover */}
             <span className="absolute inset-0 hidden scale-0 items-center justify-center bg-white/10 opacity-0 backdrop-blur-[5px] transition-[opacity,scale] duration-500 ease-out-expo group-hover:scale-100 group-hover:opacity-100 md:flex">
               <AnimatedButtonLabel className="px-8">
-                View Home
+                {p.closed?.status === "sold" ? "View Sale" : "View Home"}
               </AnimatedButtonLabel>
             </span>
             <span className="absolute top-3 left-3 flex items-center gap-1 bg-paper/90 px-2.5 py-1 text-sm text-ink backdrop-blur">
               <MapPin className="size-3.5" />
               {p.area}
             </span>
+            {p.closed && (
+              <ClosedTag
+                label={closedLabel(p)}
+                className="absolute top-3 right-3"
+              />
+            )}
           </Link>
           <div className="bg-ink pt-5 pb-4">
             <h3 className="text-xl leading-snug font-medium text-paper">
@@ -68,9 +107,33 @@ function PropertyCard({ p, index }: { p: Property; index: number }) {
                 <Bath className="size-4" /> {p.baths} Baths
               </span>
             </p>
-            <p className="mt-3 text-[clamp(1.75rem,3vw,2.75rem)] leading-none font-medium tracking-tight text-paper">
-              {p.price}
-            </p>
+            {p.closed ? (
+              <>
+                <p className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-[clamp(1.75rem,3vw,2.75rem)] leading-none font-medium tracking-tight text-paper">
+                    {p.price}
+                    {p.closed.status === "leased" && (
+                      <span className="text-base font-normal tracking-normal text-neutral-400">
+                        /month
+                      </span>
+                    )}
+                  </span>
+                  {p.closed.listPrice !== p.price && (
+                    <span className="text-neutral-500 line-through">
+                      <span className="sr-only">Listed at </span>
+                      {p.closed.listPrice}
+                    </span>
+                  )}
+                </p>
+                <p className="mt-2 text-sm text-neutral-400">
+                  [ {closedNote(p)} ]
+                </p>
+              </>
+            ) : (
+              <p className="mt-3 text-[clamp(1.75rem,3vw,2.75rem)] leading-none font-medium tracking-tight text-paper">
+                {p.price}
+              </p>
+            )}
           </div>
         </article>
       </Reveal>
@@ -115,9 +178,9 @@ export function Properties() {
                 className="max-w-md lg:self-end lg:pr-6 lg:pl-1"
               >
                 <p className="text-lg leading-relaxed text-neutral-300">
-                  A hand-picked selection from across the GTA — from family
-                  homes in York Region to modern builds in the city. Every
-                  listing is one Sara would walk you through herself.
+                  Current listings and recent sales from across the GTA — from
+                  family homes in York Region to renovated condos. Every listing
+                  is one Sara would walk you through herself.
                 </p>
               </Reveal>
             </div>

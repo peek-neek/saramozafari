@@ -11,11 +11,21 @@ import about5 from "@/assets/images/about-5.jpg"
 import property1 from "@/assets/images/property-1.jpg"
 import property2 from "@/assets/images/property-2.jpg"
 import property3 from "@/assets/images/property-3.jpg"
-import property4 from "@/assets/images/property-4.jpg"
 import property5 from "@/assets/images/property-5.jpg"
-import property6 from "@/assets/images/property-6.jpg"
 import property7 from "@/assets/images/property-7.jpg"
 import property8 from "@/assets/images/property-8.jpg"
+import flintridgeKitchen from "@/assets/images/flintridge-53-kitchen.jpg"
+import flintridgeLiving from "@/assets/images/flintridge-53-living.jpg"
+import stillwaterExterior from "@/assets/images/stillwater-54-exterior.jpg"
+import stillwaterLiving from "@/assets/images/stillwater-54-living.jpg"
+import stillwaterDining from "@/assets/images/stillwater-54-dining.jpg"
+import stillwaterBedroom from "@/assets/images/stillwater-54-bedroom.jpg"
+import stillwaterBathroom from "@/assets/images/stillwater-54-bathroom.jpg"
+import bayviewLiving from "@/assets/images/bayview-8501-living.jpg"
+import bayviewKitchen from "@/assets/images/bayview-8501-kitchen.jpg"
+import bayviewDining from "@/assets/images/bayview-8501-dining.jpg"
+import bayviewBathroom from "@/assets/images/bayview-8501-bathroom.jpg"
+import bayviewEntrance from "@/assets/images/bayview-8501-entrance.jpg"
 import process1 from "@/assets/images/process-1.jpg"
 import process2 from "@/assets/images/process-2.jpg"
 import process3 from "@/assets/images/process-3.jpg"
@@ -27,7 +37,6 @@ import service3 from "@/assets/images/service-3.jpg"
 import service4 from "@/assets/images/service-4.jpg"
 import service5 from "@/assets/images/service-5.jpg"
 import reel1 from "@/assets/images/reel-1.jpg"
-import reel3 from "@/assets/images/reel-3.jpg"
 import reel4 from "@/assets/images/reel-4.jpg"
 import reel5 from "@/assets/images/reel-5.jpg"
 import reel6 from "@/assets/images/reel-6.jpg"
@@ -148,7 +157,7 @@ export const about = {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Listings — dummy data until real listings are connected                     */
+/* Listings — recent sales & leases first, then dummy placeholders             */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -160,13 +169,28 @@ export type Property = {
   slug: string
   title: string
   area: string
+  /** Asking price, or the final sale price / monthly rent once `closed` is set. */
   price: string
-  beds: number
+  /** Set once the home has sold or leased: the card and page switch to a closed layout. */
+  closed?: {
+    status: "sold" | "leased"
+    /** Leases only, e.g. "1-year lease". */
+    term?: string
+    listPrice: string
+    percentOfList: number
+    daysOnMarket: number
+    /** Whose side Sara was on: she listed it ("seller", incl. landlords) or brought the buyer/tenant ("buyer"). */
+    side: "seller" | "buyer"
+  }
+  beds: number | string
   baths: number
   image: StaticImageData
   type: string
-  sqft: string
-  lot: string
+  /** Optional facts; the listing page shows the first two that are set. */
+  sqft?: string
+  lot?: string
+  parking?: string
+  rooms?: string
   summary: string
   overview: string[]
   features: string[]
@@ -175,6 +199,115 @@ export type Property = {
 }
 
 export const properties: Property[] = [
+  {
+    slug: "53-flintridge-road",
+    title: "53 Flintridge Road",
+    area: "Scarborough",
+    price: "$2,850",
+    closed: {
+      status: "leased",
+      listPrice: "$2,850",
+      percentOfList: 100,
+      daysOnMarket: 10,
+      side: "seller",
+      term: "1-year lease",
+    },
+    beds: 3,
+    baths: 1,
+    image: flintridgeKitchen,
+    type: "Detached Backsplit",
+    sqft: "1,100–1,500 sq ft",
+    parking: "2 spaces",
+    rooms: "6",
+    summary:
+      "A renovated three-bedroom backsplit in Dorset Park, leased at asking in 10 days.",
+    overview: [
+      "The main floor of this backsplit was opened up and redone: hardwood floors, pot lights and crown moulding run through a living and dining space anchored by a dark panelled feature wall. The kitchen pairs sage-green lower cabinets with white uppers, gold hardware, quartz counters, a farmhouse sink and an island with pendant lights.",
+      "Sara listed the home for the landlord at $2,850 a month and found a tenant on a one-year lease within 10 days, at the full asking rent.",
+    ],
+    features: [
+      "Leased at asking in 10 days",
+      "Renovated kitchen with island and farmhouse sink",
+      "Open living and dining with feature wall",
+      "Hardwood floors and pot lights",
+      "Three bedrooms, one bathroom",
+      "Two parking spaces",
+    ],
+    gallery: [flintridgeLiving],
+  },
+  {
+    slug: "54-stillwater-crescent",
+    title: "54 Stillwater Crescent",
+    area: "North York",
+    price: "$1,250,000",
+    closed: {
+      status: "sold",
+      listPrice: "$1,250,000",
+      percentOfList: 100,
+      daysOnMarket: 6,
+      side: "buyer",
+    },
+    beds: 3,
+    baths: 4,
+    image: stillwaterExterior,
+    type: "Semi-Detached",
+    parking: "4 spaces",
+    rooms: "6 + 2",
+    summary:
+      "A two-storey brick semi in Westminster-Branson, where Sara represented the buyers.",
+    overview: [
+      "A two-storey brick semi-detached home on a quiet crescent in Westminster-Branson, with a built-in double garage and room for four cars in total. The main floor has a formal living room with a fireplace between two tall windows, and a separate dining room that opens through French doors toward the kitchen.",
+      "Upstairs are three bedrooms, and the home has four bathrooms in all, including one with a double vanity and granite counter. Sara represented the buyers and helped them secure the home six days after it was listed.",
+    ],
+    features: [
+      "Sara represented the buyers",
+      "Two-storey brick semi-detached",
+      "Built-in double garage, four parking spaces",
+      "Living room with fireplace",
+      "Separate dining room with French doors",
+      "Three bedrooms, four bathrooms",
+    ],
+    gallery: [
+      stillwaterBedroom,
+      stillwaterLiving,
+      stillwaterDining,
+      stillwaterBathroom,
+    ],
+  },
+  {
+    slug: "8501-bayview-avenue",
+    title: "8501 Bayview Avenue",
+    area: "Richmond Hill",
+    price: "$725,000",
+    closed: {
+      status: "sold",
+      listPrice: "$699,800",
+      percentOfList: 104,
+      daysOnMarket: 27,
+      side: "seller",
+    },
+    beds: "2 + 1",
+    baths: 2,
+    image: bayviewLiving,
+    type: "Condo Apartment",
+    sqft: "1,200–1,399 sq ft",
+    parking: "1 space",
+    summary:
+      "A fully renovated two-bedroom-plus-den suite in Doncrest, sold above asking.",
+    overview: [
+      "This suite was renovated from end to end before it came to market: wide-plank flooring throughout, pot lights in the living room, and a long, bright layout that runs from the dining area to a sun-filled den by the windows.",
+      "The kitchen has grey shaker cabinetry, quartz counters, under-cabinet lighting and stainless appliances, and the bathroom was redone with a glass-enclosed shower, hexagon tile and matte-black fixtures. Sara priced it at $699,800 and it sold for $725,000, 104% of the asking price.",
+    ],
+    features: [
+      "Sold for 104% of the asking price",
+      "Two bedrooms plus a den",
+      "Renovated kitchen with quartz counters",
+      "Glass-enclosed shower with hexagon tile",
+      "Wide-plank flooring throughout",
+      "One parking space included",
+    ],
+    gallery: [bayviewKitchen, bayviewDining, bayviewEntrance, bayviewBathroom],
+  },
   {
     slug: "lawrence-park-residence",
     title: "The Lawrence Park Residence",
@@ -241,205 +374,25 @@ export const properties: Property[] = [
     ],
     gallery: [blog4, reel5, service3, reel7],
   },
-  {
-    slug: "cedar-lane-cottage-home",
-    title: "Cedar Lane Cottage Home",
-    area: "Oakville",
-    price: "$1,640,000",
-    beds: 4,
-    baths: 3,
-    image: property3,
-    type: "Detached",
-    sqft: "2,900 sq ft",
-    lot: "55 × 125 ft",
-    summary:
-      "A storybook cottage-style home a short walk from downtown Oakville and the lake.",
-    overview: [
-      "Twin dormers, a red metal roof and a welcoming front stoop make this one of the most recognisable homes on the street. Inside, the main floor flows from a formal living room to a sunny eat-in kitchen overlooking the garden.",
-      "Four bedrooms upstairs include a primary with vaulted ceilings. It is a rare chance to get character and a walkable location without giving up space.",
-    ],
-    features: [
-      "Metal roof and updated windows",
-      "Eat-in kitchen with garden views",
-      "Vaulted primary bedroom",
-      "Hardwood throughout the main floor",
-      "Detached single garage",
-      "Walk to the lake and downtown",
-    ],
-    nearby: [
-      { place: "Downtown Oakville", time: "4 min" },
-      { place: "Lake Ontario waterfront", time: "6 min" },
-      { place: "Oakville GO", time: "8 min" },
-      { place: "QEW", time: "7 min" },
-    ],
-    gallery: [service3, reel4, reel5, blog4],
-  },
-  {
-    slug: "maple-row-family-home",
-    title: "Maple Row Family Home",
-    area: "Vaughan",
-    price: "$1,385,000",
-    beds: 4,
-    baths: 3,
-    image: property4,
-    type: "Detached",
-    sqft: "2,750 sq ft",
-    lot: "40 × 110 ft",
-    summary:
-      "A move-in-ready family home on a quiet, kid-friendly street in Vaughan.",
-    overview: [
-      "This three-storey home has been looked after by the same family for years and it shows: a refreshed kitchen, newer furnace and roof, and freshly finished hardwood. The main floor has separate living and dining rooms plus a family room off the kitchen.",
-      "Four bedrooms are spread across the upper floors, giving teenagers or guests a little extra privacy. Schools, parks and transit are all within a short walk.",
-    ],
-    features: [
-      "Newer roof and furnace",
-      "Refreshed kitchen with breakfast area",
-      "Separate living and dining rooms",
-      "Third-floor bedroom retreat",
-      "Fenced backyard with deck",
-      "Walk to schools and parks",
-    ],
-    nearby: [
-      { place: "Vaughan Mills", time: "9 min" },
-      { place: "Local elementary school", time: "4 min" },
-      { place: "Vaughan Metropolitan Centre subway", time: "12 min" },
-      { place: "Highway 400", time: "7 min" },
-    ],
-    gallery: [reel6, reel5, blog4, reel7],
-  },
-  {
-    slug: "lakeshore-porch-house",
-    title: "Lakeshore Porch House",
-    area: "Mississauga",
-    price: "$1,975,000",
-    beds: 5,
-    baths: 4,
-    image: property5,
-    type: "Detached",
-    sqft: "3,400 sq ft",
-    lot: "70 × 160 ft",
-    summary:
-      "A wraparound-porch home on a large lot close to the Port Credit waterfront.",
-    overview: [
-      "The wraparound porch is the first thing you notice and the place you will spend summer evenings. Inside, a centre-hall plan leads to a large kitchen and family room across the back of the house, with walk-outs to the garden.",
-      "Five bedrooms and four bathrooms give a growing family plenty of space, and the 70-foot frontage leaves room to extend later if you ever want to.",
-    ],
-    features: [
-      "Wraparound covered porch",
-      "Centre-hall plan",
-      "Kitchen and family room across the back",
-      "Five bedrooms, four bathrooms",
-      "Wide 70 ft frontage",
-      "Minutes to the waterfront",
-    ],
-    nearby: [
-      { place: "Port Credit village", time: "6 min" },
-      { place: "Lake Ontario trails", time: "5 min" },
-      { place: "Port Credit GO", time: "7 min" },
-      { place: "QEW", time: "8 min" },
-    ],
-    gallery: [reel4, service3, reel5, reel6],
-  },
-  {
-    slug: "kleinburg-timber-lodge",
-    title: "Kleinburg Timber Lodge",
-    area: "Vaughan",
-    price: "$3,450,000",
-    beds: 6,
-    baths: 5,
-    image: property6,
-    type: "Detached",
-    sqft: "5,200 sq ft",
-    lot: "1.1 acres",
-    summary:
-      "A timber-and-stone retreat on more than an acre, minutes from Kleinburg village.",
-    overview: [
-      "Steep gables, exposed timber and walls of glass give this home the feel of a mountain lodge, yet it sits within an easy drive of the city. The great room has soaring ceilings and a floor-to-ceiling stone fireplace.",
-      "Six bedrooms, a walk-out lower level and over an acre of grounds make it equally suited to big family gatherings and quiet weekends in.",
-    ],
-    features: [
-      "Great room with stone fireplace",
-      "Exposed timber beams",
-      "Walk-out lower level",
-      "Six bedrooms, five bathrooms",
-      "Triple-car garage",
-      "Over an acre of private grounds",
-    ],
-    nearby: [
-      { place: "Kleinburg village", time: "5 min" },
-      { place: "McMichael Canadian Art Collection", time: "7 min" },
-      { place: "Boyd Conservation Area", time: "10 min" },
-      { place: "Highway 427", time: "8 min" },
-    ],
-    gallery: [reel3, reel4, reel5, reel7],
-  },
-  {
-    slug: "rosedale-modern-infill",
-    title: "Rosedale Modern Infill",
-    area: "Toronto",
-    price: "$4,200,000",
-    beds: 4,
-    baths: 5,
-    image: property7,
-    type: "Detached",
-    sqft: "3,900 sq ft",
-    lot: "30 × 140 ft",
-    summary:
-      "A custom-built modern home with warm wood details, tucked into a Rosedale side street.",
-    overview: [
-      "Clean lines, cedar cladding and black steel make this infill stand out without shouting. Inside, an open main floor runs from a chef's kitchen to a living room with a wall of glass onto the garden.",
-      "Four bedrooms each have their own ensuite, and the lower level adds a media room and a wine cellar. Every finish was chosen by the architect, not a builder's catalogue.",
-    ],
-    features: [
-      "Architect-designed custom build",
-      "Wall of glass to the garden",
-      "Every bedroom with an ensuite",
-      "Lower-level media room",
-      "Temperature-controlled wine cellar",
-      "Heated floors throughout",
-    ],
-    nearby: [
-      { place: "Rosedale subway station", time: "5 min" },
-      { place: "Yorkville", time: "8 min" },
-      { place: "Rosedale Ravine trails", time: "3 min" },
-      { place: "Don Valley Parkway", time: "6 min" },
-    ],
-    gallery: [reel3, reel5, reel6, reel7],
-  },
-  {
-    slug: "unionville-glass-house",
-    title: "Unionville Glass House",
-    area: "Markham",
-    price: "$2,780,000",
-    beds: 5,
-    baths: 5,
-    image: property8,
-    type: "Detached",
-    sqft: "4,100 sq ft",
-    lot: "65 × 145 ft",
-    summary:
-      "A light-filled modern home with a pool, close to historic Main Street Unionville.",
-    overview: [
-      "Floor-to-ceiling glass wraps the main floor, so the kitchen, dining and living areas all look out over the pool and garden. Polished concrete floors and a floating staircase keep the look calm and minimal.",
-      "Five bedrooms upstairs share a skylit hallway, and the primary suite has a private balcony over the backyard. It is resort-style living within walking distance of Unionville's shops and trails.",
-    ],
-    features: [
-      "Floor-to-ceiling glass on the main floor",
-      "In-ground saltwater pool",
-      "Floating staircase with skylight",
-      "Primary suite with private balcony",
-      "Polished concrete floors",
-      "Walk to Main Street Unionville",
-    ],
-    nearby: [
-      { place: "Main Street Unionville", time: "4 min" },
-      { place: "Toogood Pond Park", time: "5 min" },
-      { place: "Unionville GO", time: "6 min" },
-      { place: "Highway 407", time: "7 min" },
-    ],
-    gallery: [reel3, blog4, reel5, reel7],
-  },
 ]
+
+/** "Sold" or "Leased": how a closed listing ended. */
+export const closedLabel = (p: Property) =>
+  p.closed?.status === "leased" ? "Leased" : "Sold"
+
+/** One-line result for a closed listing, e.g. "Sold at 104% of asking in 27 days". */
+export const closedNote = (p: Property) => {
+  if (!p.closed) return ""
+  const { percentOfList, daysOnMarket, side, term } = p.closed
+  const verb = closedLabel(p)
+  if (side === "buyer")
+    return `Represented the ${p.closed.status === "leased" ? "tenant" : "buyer"} · ${verb.toLowerCase()} in ${daysOnMarket} days`
+  const atPrice =
+    percentOfList === 100 ? "at asking" : `at ${percentOfList}% of asking`
+  return [`${verb} ${atPrice} in ${daysOnMarket} days`, term]
+    .filter(Boolean)
+    .join(" · ")
+}
 
 export const getProperty = (slug: string) =>
   properties.find((p) => p.slug === slug)

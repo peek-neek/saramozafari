@@ -9,7 +9,7 @@ import {
   type ContactValues,
 } from "@/lib/contact"
 import { renderBrandedEmail } from "@/lib/email"
-import { brand, getProperty } from "@/lib/site-data"
+import { brand, closedLabel, getProperty } from "@/lib/site-data"
 
 export type ContactState = {
   status: "idle" | "success" | "error"
@@ -28,7 +28,8 @@ const formatPhone = (digits: string) => {
   return `${m[1] ? "+1 " : ""}${m[2]}-${m[3]}-${m[4]}`
 }
 
-const GENERIC_ERROR = "Something went wrong. Please try again, or call Sara directly."
+const GENERIC_ERROR =
+  "Something went wrong. Please try again, or call Sara directly."
 
 /**
  * Sends the homepage contact form to CONTACT_TO_EMAIL (falls back to
@@ -58,7 +59,8 @@ export async function sendContactMessage(
 
   const apiKey = process.env.RESEND_API_KEY
   const to = process.env.CONTACT_TO_EMAIL ?? process.env.NEWSLETTER_TO_EMAIL
-  const from = process.env.RESEND_FROM_EMAIL ?? "Saramoz Homes <onboarding@resend.dev>"
+  const from =
+    process.env.RESEND_FROM_EMAIL ?? "Saramoz Homes <onboarding@resend.dev>"
 
   if (!apiKey || !to) {
     console.error("[contact] Missing RESEND_API_KEY or CONTACT_TO_EMAIL")
@@ -75,9 +77,11 @@ export async function sendContactMessage(
 
   // Pre-filled reply for the "Send a Text" button — Sara can edit before sending.
   // "?&body=" is read correctly by both iOS and Android.
-  const textStarter = listing
-    ? `Hi ${firstName}, this is ${brand.agent} from ${brand.name}. Thank you for your interest in ${listing.title}! I'd be happy to answer any questions or set up a private showing. When would be a good time for you?`
-    : `Hi ${firstName}, this is ${brand.agent} from ${brand.name}. Thank you for reaching out through my website! I'd love to learn a little more about what you're looking for. When would be a good time for a quick call?`
+  const textStarter = listing?.closed
+    ? `Hi ${firstName}, this is ${brand.agent} from ${brand.name}. Thank you for reaching out about ${listing.title}! I'd be happy to talk about what homes like yours are going for. When would be a good time for a quick call?`
+    : listing
+      ? `Hi ${firstName}, this is ${brand.agent} from ${brand.name}. Thank you for your interest in ${listing.title}! I'd be happy to answer any questions or set up a private showing. When would be a good time for you?`
+      : `Hi ${firstName}, this is ${brand.agent} from ${brand.name}. Thank you for reaching out through my website! I'd love to learn a little more about what you're looking for. When would be a good time for a quick call?`
 
   // Pre-filled draft for the "Reply by Email" button. CRLF line breaks are the
   // mailto: standard and keep paragraphs intact across mail apps.
@@ -87,9 +91,11 @@ export async function sendContactMessage(
   const emailBody = [
     `Hi ${firstName},`,
     "",
-    listing
-      ? `Thank you for your interest in ${listing.title} in ${listing.area}. I'd be happy to answer any questions you have about the home, the neighbourhood or next steps, and I can set up a private showing at a time that suits you.`
-      : `Thank you for reaching out through my website. I'd love to learn a little more about what you're looking for — whether you're buying, selling or just exploring your options — so I can point you in the right direction.`,
+    listing?.closed
+      ? `Thank you for reaching out about ${listing.title} in ${listing.area}. That home has ${listing.closed.status === "leased" ? "been leased" : "sold"}, but I'd be glad to walk you through what similar homes are ${listing.closed.status === "leased" ? "renting" : "selling"} for, or help you find one like it.`
+      : listing
+        ? `Thank you for your interest in ${listing.title} in ${listing.area}. I'd be happy to answer any questions you have about the home, the neighbourhood or next steps, and I can set up a private showing at a time that suits you.`
+        : `Thank you for reaching out through my website. I'd love to learn a little more about what you're looking for — whether you're buying, selling or just exploring your options — so I can point you in the right direction.`,
     "",
     "When would be a good time for a quick call?",
     // No sign-off: Sara's mail app adds her own signature below the draft.
@@ -107,16 +113,34 @@ export async function sendContactMessage(
       : `Someone just reached out through the contact form on ${brand.name}. Their details are below.`,
     details: [
       ...(listing
-        ? [{ label: "Listing", value: `${listing.title}, ${listing.area} · ${listing.price}` }]
+        ? [
+            {
+              label: "Listing",
+              value: `${listing.title}, ${listing.area} · ${listing.closed ? `${closedLabel(listing)} ${listing.price}` : listing.price}`,
+            },
+          ]
         : []),
       { label: "Name", value: values.name },
       { label: "Mobile", value: formatPhone(digits), href: `tel:${e164}` },
-      { label: "Email", value: values.email, href: values.email && `mailto:${values.email}` },
+      {
+        label: "Email",
+        value: values.email,
+        href: values.email && `mailto:${values.email}`,
+      },
     ],
     message: { label: "Message", body: values.message },
     actions: [
-      { label: `Call ${firstName}`, href: `tel:${e164}`, primary: true, icon: "phone" },
-      { label: "Send a Text", href: `sms:${e164}?&body=${encodeURIComponent(textStarter)}`, icon: "text" },
+      {
+        label: `Call ${firstName}`,
+        href: `tel:${e164}`,
+        primary: true,
+        icon: "phone",
+      },
+      {
+        label: "Send a Text",
+        href: `sms:${e164}?&body=${encodeURIComponent(textStarter)}`,
+        icon: "text",
+      },
       ...(values.email
         ? [{ label: "Reply by Email", href: mailtoHref, icon: "mail" as const }]
         : []),

@@ -376,6 +376,12 @@ export const properties: Property[] = [
   },
 ]
 
+export type ListingStatus = "active" | "sold" | "leased"
+
+/** Where a listing stands: still for sale/rent, or how it closed. */
+export const listingStatus = (p: Property): ListingStatus =>
+  p.closed?.status ?? "active"
+
 /** "Sold" or "Leased": how a closed listing ended. */
 export const closedLabel = (p: Property) =>
   p.closed?.status === "leased" ? "Leased" : "Sold"

@@ -14,7 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-import { ClosedTag } from "@/components/home/Properties"
+import { ClosedTag } from "@/components/listing/ClosedTag"
 import { AnimatedButton } from "@/components/motion/AnimatedButton"
 import { Reveal, Stagger } from "@/components/motion/Reveal"
 import { SplitText } from "@/components/motion/SplitText"
